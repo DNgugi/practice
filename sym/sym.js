@@ -1,33 +1,57 @@
-// The mathematical term symmetric difference of two sets is the set of elements which are in either of the two sets but not in both. For example, for sets A = {1, 2, 3} and B = {2, 3, 4}, A △ B = {1, 4}.
-
-// Symmetric difference is a binary operation, which means it operates on only two elements. So to evaluate an expression involving symmetric differences among three elements (A △ B △ C), you must complete one operation at a time. Thus, for sets A and B above, and C = {2, 3}, A △ B △ C = (A △ B) △ C = {1, 4} △ {2, 3} = {1, 2, 3, 4}.
-
-
 //ListOf arrays -> array
 
 // Takes two or more arrays and returns an array of their symmetric difference. The returned array must contain only unique values (no duplicates).
 
-// const sym = (loa) => []; //stub
+// const sym2 = (loa) => []; //stub
 
-const sym = (...loa) => {
-        // 1, 2, 3
-    // 2    f t f
-    // 3    f f t
-    // 4    f f f
-    let results = []
-    let collection = [...loa[0], ...loa[1]]
-    for (el of collection) {
-        if (loa[0].includes(el) && loa[1].includes(el)) {
-            results.push(el);
-        }
+const symAll = (...loa) => {
+  //call sym with next element in original loa with the result of calling sym on the first two elements
+  if (loa.length == 0) {
+    return [];
+  }
+
+  let arr = [...loa];
+
+  if (arr.length > 2) {
+    let first = arr.shift();
+    let second = arr.shift();
+    let nxt = arr.shift();
+
+    return sym(sym(first, second), nxt);
+  }
+  return sym(loa[0], loa[1]);
+};
+
+const sym = (l1, l2) => {
+  if (l1.length == 0 && l2.length > 0) {
+    return l2;
+  }
+  if (l2.length == 0 && l1.length > 0) {
+    return l1;
+  }
+  let results = [];
+  let collection = [...l1, ...l2];
+  for (el of collection) {
+    if (l1.includes(el) && l2.includes(el)) {
+      results.push(el);
     }
-    for (item of results) {
-        collection.splice(collection.indexOf(item), 1);
-    }
-    
-    return collection.sort()
-}
+  }
+  for (item of results) {
+    collection.splice(collection.indexOf(item), 1);
+  }
 
-console.log(sym([1, 2, 3], [2, 3, 4]));
+  return collection.sort();
+};
 
-module.exports = sym;
+// console.log(
+//   symAll(
+//     [3, 3, 3, 2, 5],
+//     [2, 1, 5, 7],
+//     [3, 4, 6, 6],
+//     [1, 2, 3],
+//     [5, 3, 9, 8],
+//     [1]
+//   )
+// );
+
+module.exports = symAll;
