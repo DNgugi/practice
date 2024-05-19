@@ -8,7 +8,7 @@ const noRepeats = (str) => {
         return 0;
     }
     //Use sets to store unique numbers
-    //Tree traversal arbitrarity-arity tree
+    //Tree traversal arbitrary-arity tree
     let perms = permutations(str);
     return removeRepetitions(perms).length;
 
