@@ -1,0 +1,2 @@
+const palutations = require('./palutations');
+

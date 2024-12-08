@@ -1,0 +1,2 @@
+const permutations = require('./permutations');
+
