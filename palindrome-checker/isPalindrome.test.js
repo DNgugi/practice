@@ -46,4 +46,7 @@ it("works with special characters only in palindrome input", () => {
 
 it("works with non-palindrome input of even length", () => {
   expect(isPalindrome("almostomla")).toBe(false);
+    expect(isPalindrome("1 eye for of 1 eye.")).toBe(false);
+
 });
+

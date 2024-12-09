@@ -16,22 +16,24 @@ const isPalindrome = (text) => {
   }
 
   const cleanInput = (text) => {
-    return text.replace(/[^a-zA-Z0-9]/g, "");
+    return text.toLowerCase().replace(/[^a-z0-9]/g, "");
   };
 
   text = cleanInput(text);
   let startPointer = 0;
   let endPointer = text.length - 1;
+  let result;
 
-  while (startPointer !== endPointer) {
-    startPointer++;
-    endPointer--;
+  while (startPointer < endPointer) {
     if (text[startPointer] !== text[endPointer]) {
       return false;
     } else {
-      return true;
+      result = true;
     }
+    startPointer++;
+    endPointer--;
   }
+  return result;
 };
 
 checkBtn.addEventListener("click", (e) => {
