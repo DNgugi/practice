@@ -20,14 +20,16 @@
  * (555)555-5555
  */
 const validator = (phone) => {
-  const regex = /1?\s?\(?[0-9]+\)?\s?-?[0-9]+\s?-?[0-9]+/;
-    // console.log(phone.match(regex));
-    if (phone.length < 10) {
-        return false;
-    }
+  if (phone.length > 16) {
+    return false;
+  }
+  // regex?:  /1\s?(\(?\d{3}\)?)[\s-]?(\d{3})[\s-]?(\d{4})/;
+
+  const regex = /^(1\s?)?(\(\d{3}\)|\d{3})[\s\-]?\d{3}[\s\-]?\d{4}$/;
+
   return regex.test(phone) ? true : false;
 };
 
-console.log(validator("555-5555"));
+console.log(validator("123**&!!asdf#"));
 
 module.exports = validator;
