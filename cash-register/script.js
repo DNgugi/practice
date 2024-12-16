@@ -10,12 +10,33 @@ let cid = [
   ["TWENTY", 60],
   ["ONE HUNDRED", 100],
 ];
-
+const calculate = (price, cid, cashTendered) => {
+  const result = {
+    status: "",
+    changeDue: [],
+  };
+  return result;
+};
 const changeDue = document.getElementById("change-due");
+const purchaseBtn = document.getElementById("purchase-btn");
+
 let cash = document.getElementById("cash");
-if (cash.value < price) {
-  alert("Customer does not have enough money to purchase the item");
-}
-if (cash.value === price) {
-  changeDue.innerText = "No change due - customer paid with exact cash";
-}
+
+cash.addEventListener("change", () => {
+  if (cash.value < price) {
+    alert("Customer does not have enough money to purchase the item");
+  } else if (cash.value == price) {
+    changeDue.innerText = "No change due - customer paid with exact cash";
+  }
+});
+
+purchaseBtn.addEventListener("click", () => {
+  const { status } = calculate(price, cid, cash.value);
+  if (status === "INSUFFICIENT_FUNDS") {
+    changeDue.innerText = `Status: ${status}`;
+  } else if (status === "CLOSED") {
+    changeDue.innerText = `Status: ${status}`;
+  } else if (status === "OPEN") {
+    changeDue.innerText = `Status: ${status}`;
+  }
+});
