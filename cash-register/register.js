@@ -26,7 +26,8 @@ const register = (price, cashTendered, drawer) => {
     if (drawer[drawerStartIndex][1] - changeDue > 0){
         changeArr.push([drawer[drawerStartIndex][0], changeDue])
     } 
-    console.log(changeArr);
+    console.log(changeArr[0]);
+    
     return changeArr;
 
 
