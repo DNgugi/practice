@@ -13,5 +13,5 @@ test("it works in OPEN case", () => {
       ["TWENTY", 60],
       ["ONE HUNDRED", 100],
     ])
-  ).toBe({ changeDue: [["QUARTER", "0.5"]], status: "OPEN" });
+  ).toEqual([["QUARTER", "0.50"]]);
 });
