@@ -1,5 +1,5 @@
 //DUMMY DATA
-let price = 1.87;
+let price = 3.26;
 let cid = [
   ["PENNY", 1.01],
   ["NICKEL", 2.05],
@@ -20,41 +20,79 @@ const purchaseBtn = document.getElementById("purchase-btn");
 //Register Function
 const register = (price, cashTendered, drawer) => {
   const currencyDictionary = [
-    ["ONE HUNDRED", 100],
-    ["TWENTY", 20],
-    ["TEN", 10],
-    ["FIVE", 5],
-    ["ONE", 1],
+    ["ONE HUNDRED", 100.0],
+    ["TWENTY", 20.0],
+    ["TEN", 10.0],
+    ["FIVE", 5.0],
+    ["ONE", 1.0],
     ["QUARTER", 0.25],
     ["DIME", 0.1],
     ["NICKEL", 0.05],
     ["PENNY", 0.01],
   ];
   let changeDue = (cashTendered - price).toFixed(2);
-  console.log("Change Due", changeDue);
-  let drawerStartIndex;
-
-  for (let i = 0; i < currencyDictionary.length; i++) {
-    if (changeDue - currencyDictionary[i][1] > 0) {
-      drawerStartIndex = i - 1;
-      break;
-    }
-  }
   drawer = drawer.reverse();
-  
-  let changeArr = [];
-  if (changeDue > 0 && drawerStartIndex <= drawer.length) {
-    let amt = drawer[drawerStartIndex][1];
-    if ((changeDue / amt).toFixed(2) > 1) {
-      changeDue -= amt;
-      changeArr.push([drawer[drawerStartIndex][0], changeDue]);
-      console.log(changeArr);
+  const changeArr = [];
+  const drawerTotal = drawer.reduce((acc, item) => acc + item[1], 0);
+  const result = { status: "", changeArr: changeArr };
+
+  const canIssueExactChange = (changeDue, drawer) => {
+    for (let i = 0; i < drawer.length; i++) {
+      /**
+       * check if changeDue can use this slot
+       * dividing changeDue with currencyBase tells us if it can be used to issue some of all of changeDue
+       * and how many coins/note we can use for this purpose
+       * */
+      let currencyName = currencyDictionary[i][0]; // e.g 0.25 or 0.05
+      let currencyBase = currencyDictionary[i][1]; // e.g 0.25 or 0.05
+
+      let piecesOfCurrency = Math.floor(changeDue / currencyBase);
+      let isValidDenomination = piecesOfCurrency > 1;
+
+      if (isValidDenomination) {
+        //if the highest possible amount in that base cannot be issued, we take everything we can in that base from the drawer.
+        //if the amount in drawer in that base exceeds what we need, only take what we need!
+        const change =
+          (piecesOfCurrency * currencyBase).toFixed(2) > drawer[i][1]
+            ? drawer[i][1]
+            : (piecesOfCurrency * currencyBase).toFixed(2);
+        changeDue -= change;
+        changeArr.push([currencyName, `$${change}`]);
+        //canchange
+      }
+    }
+    if (changeDue > 0) {
+      return true;
     } else {
-      drawerStartIndex++;
+      return false;
+    }
+  };
+
+  if (drawerTotal == changeDue) {
+    result.status = "CLOSED";
+    result.changeArr = drawer.filter((i) => i[1] > 0);
+    return result;
+  }
+  if (drawerTotal < changeDue) {
+    result.status = "INSUFFICIENT_FUNDS";
+    result.changeArr = [];
+
+    return result;
+  }
+  if (drawerTotal > changeDue) {
+    /**
+     * CASE 1: CanIssueChange
+     */
+
+    if (!canIssueExactChange(changeDue, drawer)) {
+      result.status = "INSUFFICIENT_FUNDS";
+      result.changeArr = [];
+      return result;
+    } else {
+      result.status = "OPEN";
+      return result;
     }
   }
-
-  console.log("change array", changeArr);
 };
 
 cash.addEventListener("change", () => {
@@ -66,12 +104,12 @@ cash.addEventListener("change", () => {
 });
 
 purchaseBtn.addEventListener("click", () => {
-  const { status } = register(price, cash.value, cid);
-  if (status === "INSUFFICIENT_FUNDS") {
-    changeDiv.innerText = `Status: ${status}`;
-  } else if (status === "CLOSED") {
-    changeDiv.innerText = `Status: ${status}`;
-  } else if (status === "OPEN") {
-    changeDiv.innerText = `Status: ${status}`;
+  const { status, changeArr } = register(price, cash.value, cid);
+  console.log(status, changeArr);
+
+  if (status === "CLOSED" || status === "OPEN") {
+    changeDiv.innerText = `Status: ${status} ${changeArr}`;
+  } else {
+    changeDiv.innerText = `Status: INSUFFICIENT_FUNDS`;
   }
 });
