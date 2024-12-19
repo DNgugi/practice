@@ -41,7 +41,7 @@ const register = (price, cashTendered, drawer) => {
         //canchange
       }
     }
-    if (changeDue > 0) {
+    if (changeDue >= 0) {
       return true;
     } else {
       return false;
@@ -50,7 +50,9 @@ const register = (price, cashTendered, drawer) => {
 
   if (drawerTotal == changeDue) {
     result.status = "CLOSED";
-    result.changeArr = drawer.filter((i) => i[1] > 0);
+    result.changeArr = drawer.filter((i) => i[1] !== 0);
+    result.changeArr.forEach((item) => (item[1] = `$${item[1].toString()}`));
+    // console.log("Closed case", result.changeArr[0]);
     return result;
   }
   if (drawerTotal < changeDue) {
@@ -60,38 +62,50 @@ const register = (price, cashTendered, drawer) => {
     return result;
   }
   if (drawerTotal > changeDue) {
-    /**
-     * CASE 1: CanIssueChange
-     */
-
     if (!canIssueExactChange(changeDue, drawer)) {
       result.status = "INSUFFICIENT_FUNDS";
       result.changeArr = [];
       return result;
     } else {
       result.status = "OPEN";
+      changeArr.forEach((arr) => arr.toString().split("").join(" "));
       return result;
     }
   }
 };
 
-// console.log(register(3.26, 100, [
-//   ["PENNY", 1.01],
-//   ["NICKEL", 2.05],
-//   ["DIME", 3.1],
-//   ["QUARTER", 4.25],
-//   ["ONE", 90],
-//   ["FIVE", 55],
-//   ["TEN", 20],
-//   ["TWENTY", 60],
-//   ["ONE HUNDRED", 100],
-// ])
-// )
+console.log(
+  register(3.26, 100, [
+    ["PENNY", 1.01],
+    ["NICKEL", 2.05],
+    ["DIME", 3.1],
+    ["QUARTER", 4.25],
+    ["ONE", 90],
+    ["FIVE", 55],
+    ["TEN", 20],
+    ["TWENTY", 60],
+    ["ONE HUNDRED", 100],
+  ]).changeArr
+);
 console.log(
   register(19.5, 20, [
     ["PENNY", 0.01],
     ["NICKEL", 0],
-    ["DIME", 10],
+    ["DIME", 0],
+    ["QUARTER", 0],
+    ["ONE", 0],
+    ["FIVE", 0],
+    ["TEN", 0],
+    ["TWENTY", 0],
+    ["ONE HUNDRED", 0],
+  ])
+);
+
+console.log(
+  register(19.5, 20, [
+    ["PENNY", 0.5],
+    ["NICKEL", 0],
+    ["DIME", 0],
     ["QUARTER", 0],
     ["ONE", 0],
     ["FIVE", 0],

@@ -1,5 +1,5 @@
 //DUMMY DATA
-let price = 3.26;
+let price = 1.87;
 let cid = [
   ["PENNY", 1.01],
   ["NICKEL", 2.05],
@@ -61,7 +61,7 @@ const register = (price, cashTendered, drawer) => {
         //canchange
       }
     }
-    if (changeDue > 0) {
+    if (changeDue >= 0) {
       return true;
     } else {
       return false;
@@ -70,7 +70,9 @@ const register = (price, cashTendered, drawer) => {
 
   if (drawerTotal == changeDue) {
     result.status = "CLOSED";
-    result.changeArr = drawer.filter((i) => i[1] > 0);
+    result.changeArr = drawer.filter((i) => i[1] !== 0);
+    result.changeArr.forEach((item) => (item[1] = `$${item[1].toString()}`));
+    // console.log("Closed case", result.changeArr[0]);
     return result;
   }
   if (drawerTotal < changeDue) {
@@ -90,6 +92,8 @@ const register = (price, cashTendered, drawer) => {
       return result;
     } else {
       result.status = "OPEN";
+      changeArr.forEach((arr) => arr.toString().split(",").join(" "));
+
       return result;
     }
   }
@@ -98,18 +102,18 @@ const register = (price, cashTendered, drawer) => {
 cash.addEventListener("change", () => {
   if (cash.value < price) {
     alert("Customer does not have enough money to purchase the item");
-  } else if (cash.value == price) {
+  }
+  if (cash.value == price) {
     changeDiv.innerText = "No change due - customer paid with exact cash";
   }
 });
 
 purchaseBtn.addEventListener("click", () => {
   const { status, changeArr } = register(price, cash.value, cid);
-  console.log(status, changeArr);
 
   if (status === "CLOSED" || status === "OPEN") {
     changeDiv.innerText = `Status: ${status} ${changeArr}`;
   } else {
-    changeDiv.innerText = `Status: INSUFFICIENT_FUNDS`;
+    changeDiv.innerText = "Status: INSUFFICIENT_FUNDS";
   }
 });

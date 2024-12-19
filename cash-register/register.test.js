@@ -13,10 +13,10 @@ test("it works in OPEN case", () => {
       ["TWENTY", 60],
       ["ONE HUNDRED", 100],
     ])
-  ).toEqual({ changeArr: [["QUARTER", "0.50"]], status: "OPEN" });
+  ).toEqual({ changeArr: [["QUARTER", "$0.50"]], status: "OPEN" });
 });
 
-test("it works in INSUFFICIENT case", () => {
+test("it works in INSUFFICIENT case, not enough change", () => {
   expect(
     register(19.5, 20, [
       ["PENNY", 0.01],
@@ -29,5 +29,21 @@ test("it works in INSUFFICIENT case", () => {
       ["TWENTY", 0],
       ["ONE HUNDRED", 0],
     ])
-  ).toEqual({ changeArr: [], status: "" });
+  ).toEqual({ changeArr: [], status: "INSUFFICIENT_FUNDS" });
+});
+
+test("it works in CLOSED case, exact change", () => {
+  expect(
+    register(19.5, 20, [
+      ["PENNY", 0.5],
+      ["NICKEL", 0],
+      ["DIME", 0],
+      ["QUARTER", 0],
+      ["ONE", 0],
+      ["FIVE", 0],
+      ["TEN", 0],
+      ["TWENTY", 0],
+      ["ONE HUNDRED", 0],
+    ])
+  ).toEqual({ changeArr: [["PENNY", "$0.5"]], status: "CLOSED" });
 });
