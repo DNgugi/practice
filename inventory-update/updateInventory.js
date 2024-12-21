@@ -1,52 +1,40 @@
 // listOf Array, listOf Array -> Array
 // Update inventory based on a fresh delivery. The returned inventory array should be in alphabetical order by item.
+// const removeDuplicates = (arr) => {
+//   if (arr.length === 0) {
+//     return arr;
+//   }
+//   let set = new Set();
+//   for (let i = 0; i < arr.length; i++) {
+//     if (!set.has(arr[i])) {
+//       set.add(arr[i]);
+//     }
+//   }
+//   return Array.from(set);
+// };
 
 const updateInventory = (inventory, delivery) => {
-  let count = delivery.length;
-  while (count > 0) {
-      let currentItem = delivery.shift();
-    //Check if it is in inventory
-      if (itemExists(currentItem, inventory)) {
-      inventory = updateItem(currentItem, inventory);
+  /**
+   * Hint 1
+
+You need to work through each item of the new inventory to see if it exists in the current inventory or not. Remember that the product name is stored as the second element of each sub-array: array[0][1] = "item-name".
+Hint 2
+
+If the item exists, you need to add the quantity from the new inventory. If the item doesn’t exist, you need to add the entire item.
+Hint 3
+
+Return the completed inventory in alphabetical order.
+   */
+
+  for (let item of delivery) {
+    let itemName = item[1];
+    if (inventory.indexOf(itemName) === -1) {
+      inventory.push(item);
     } else {
-      inventory = addItem(currentItem, inventory);
-    }
-
-    count--;
-  }
-
-  //if it us, update the qty
-  //if it isn't, add it
-    return inventory.sort((a, b) => {
-      if (a[1] === b[1]) {
-        return 0;
-      } else {
-        return a[1] < b[1] ? -1 : 1;
-      }
-  });
-};
-
-const itemExists = (item, inventory) => {
-  for (i of inventory) {
-    if (i[1] == item[1]) {
-      return true;
-    } else {
-      return false;
+      inventory[inventory.indexOf(itemName)][0] += item[0];
     }
   }
-};
-
-const updateItem = (item, inventory) => {
-  for (let i = 0; i < inventory.length; i++) {
-    if (inventory[i][1] == item[1]) {
-      inventory[i] = [inventory[i][0] + item[0], item[1]];
-    }
-  }
-  return inventory;
-};
-
-const addItem = (item, inventory) => {
-  return [...inventory, item];
+  return inventory.sort((a, b) => a - b);
 };
 
 console.log(
@@ -57,7 +45,6 @@ console.log(
       [5, "Microphone"],
     ],
     [
-      
       [3, "Half-Eaten Apple"],
       [67, "Bowling Ball"],
       [7, "Toothpaste"],
