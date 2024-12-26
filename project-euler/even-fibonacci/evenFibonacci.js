@@ -34,23 +34,23 @@ fiboEvenSum(4000000) -> 4613732.
 //return sum of even numbers in that fib sequence;
 
 function fiboEvenSum(n) {
-  const fibArr = [1, 2];
+  let fibArr = [1, 2];
+  let checker = 0;
+  let generator = 2;
 
-  let finalArr = [2];
-
-  for (let i = 2; i < n; i++) {
-    let candidate = fibArr[i - 1] + fibArr[i - 2];
-    fibArr[i] = candidate;
-    if (candidate < n && candidate % 2 === 0) {
-      finalArr.push(candidate);
-    }
+  while (fibArr[checker] < n) {
+    fibArr.push(fibArr[generator - 2] + fibArr[generator - 1]);
+    checker++;
+    generator++;
   }
+  //   fibArr.filter((item) => item <= n);
+  console.log(fibArr);
 
-  console.log(finalArr);
-
-  return finalArr.reduce((acc, item) => acc + item, 0);
+  return fibArr
+    .filter((item) => item <= n && item % 2 === 0)
+    .reduce((acc, item) => acc + item, 0);
 }
 
-console.log(fiboEvenSum(10));
+console.log(fiboEvenSum(34));
 
 module.exports = fiboEvenSum;
