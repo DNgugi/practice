@@ -22,19 +22,45 @@
  * smallestMult(20) -> 232792560.
  * */
 
-const smallestMult = (n) => {
-  let smallest = n;
-  let arrayN = [];
-  for (let i = 1; i <= n; i++) arrayN.push(i);
+const sym = require("../../sym/sym");
 
-  arrayN.forEach((item) => {
-    if (smallest % item === 0) {
-      return smallest;
+const isPrime = (n) => {
+  let sqrt = Math.sqrt(n);
+  for (let i = 2; i <= sqrt; i++) {
+    if (n % i === 0) {
+      return false;
     }
-    smallest++;
-  });
-  console.log(smallest, arrayN);
-  // return true;
+  }
+  return true;
+};
+
+const nextPrime = (n) => {
+  isPrime(n + 1) ? n + 1 : nextPrime(n + 1);
+};
+
+const factorize = (n) => {
+  let factors = [];
+  let currentPrime = 2;
+  while (n > 0) {
+    if (n % nextPrime(currentPrime) === 0) {
+      factors.push(currentPrime);
+      console.log(factors);
+      n = n / nextPrime;
+    }
+    currentPrime++;
+    n--;
+  }
+  return factors;
+};
+
+const smallestMult = (n) => {
+  let factorArr = [];
+  for (let i = 2; i <= n; i++) {
+    factorArr.push([i, factorize(i)]);
+  }
+  sym(...factorArr);
+
+  return factorArr.reduce((acc, item) => acc * item);
 };
 
 smallestMult(5);
