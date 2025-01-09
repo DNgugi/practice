@@ -29,27 +29,23 @@ const isPrime = (n) => {
   for (let i = 2; i <= sqrt; i++) {
     if (n % i === 0) {
       return false;
-    }
+    } else {return true}
   }
-  return true;
+  
 };
 
-const nextPrime = (n) => {
-  isPrime(n + 1) ? n + 1 : nextPrime(n + 1);
-};
+const nextPrime = (n) => isPrime(n + 1) ? n + 1 : nextPrime(n + 1);
 
 const factorize = (n) => {
   let factors = [];
   let currentPrime = 2;
-  while (n > 0) {
+  while (n > 1) {
     if (n % nextPrime(currentPrime) === 0) {
       console.log(n);
       factors.push(currentPrime);
-      console.log(factors);
       n = n / nextPrime;
     }
     currentPrime++;
-    n--;
   }
   return factors;
 };
@@ -58,12 +54,13 @@ const smallestMult = (n) => {
   let factorArr = [];
   for (let i = 2; i <= n; i++) {
     factorArr.push([i, factorize(i)]);
+	  console.log(factorArr)
   }
   sym(...factorArr);
 
-  return factorArr.reduce((acc, item) => acc * item);
+  return factorArr.reduce((acc, item) => acc * item, 1);
 };
 
-smallestMult(5);
+console.log(smallestMult(5))
 
 module.exports = smallestMult;
