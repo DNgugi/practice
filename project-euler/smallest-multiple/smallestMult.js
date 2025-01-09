@@ -43,6 +43,7 @@ const factorize = (n) => {
   let currentPrime = 2;
   while (n > 0) {
     if (n % nextPrime(currentPrime) === 0) {
+      console.log(n);
       factors.push(currentPrime);
       console.log(factors);
       n = n / nextPrime;
