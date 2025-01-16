@@ -23,44 +23,21 @@
  * */
 
 const sym = require("../../sym/sym");
+const isPrime = require("./isPrime");
 
-const isPrime = (n) => {
-  let sqrt = Math.sqrt(n);
-  for (let i = 2; i <= sqrt; i++) {
-    if (n % i === 0) {
-      return false;
-    } else {return true}
-  }
-  
-};
 
-const nextPrime = (n) => isPrime(n + 1) ? n + 1 : nextPrime(n + 1);
-
-const factorize = (n) => {
-  let factors = [];
-  let currentPrime = 2;
-  while (n > 1) {
-    if (n % nextPrime(currentPrime) === 0) {
-      console.log(n);
-      factors.push(currentPrime);
-      n = n / nextPrime;
-    }
-    currentPrime++;
-  }
-  return factors;
-};
 
 const smallestMult = (n) => {
   let factorArr = [];
   for (let i = 2; i <= n; i++) {
     factorArr.push([i, factorize(i)]);
-	  console.log(factorArr)
+    console.log(factorArr);
   }
   sym(...factorArr);
 
   return factorArr.reduce((acc, item) => acc * item, 1);
 };
 
-console.log(smallestMult(5))
+console.log(smallestMult(5));
 
 module.exports = smallestMult;

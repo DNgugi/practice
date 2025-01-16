@@ -5,3 +5,4 @@ describe("Smallest Multiple", () => {
     expect(smallestMult(5)).toBe(60);
   });
 });
+
